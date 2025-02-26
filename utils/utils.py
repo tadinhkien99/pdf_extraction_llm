@@ -4,41 +4,18 @@
 # @Author:      Kuro
 # @Time:        1/18/2025 11:05 AM
 
-# ------------------------------------------------
-# Utility: Map of spoken words to digits
-# ------------------------------------------------
-WORD_TO_DIGIT = {
-    "zero": "0",
-    "one": "1",
-    "two": "2",
-    "three": "3",
-    "four": "4",
-    "five": "5",
-    "six": "6",
-    "seven": "7",
-    "eight": "8",
-    "nine": "9"
-}
+import re
 
 
-# ------------------------------------------------
-# Utility: Find exactly 3 consecutive spoken digits
-# ------------------------------------------------
-def find_three_spoken_digits(text: str):
-    """
-    Finds exactly 3 consecutive spoken digits in the text and returns them
-    as a string (e.g., "four seven one" => "471"). Returns None if not found.
-    """
-    tokens = text.lower().split()
-    consecutive_digits = []
+def extract_fields(text):
+    try:
+        pattern = r"<\|im_start\|>assistant<\|im_sep\|>(.*?)<\|im_end\|>"
+        match = re.search(pattern, text, re.DOTALL)
 
-    for token in tokens:
-        if token in WORD_TO_DIGIT:
-            consecutive_digits.append(WORD_TO_DIGIT[token])
+        if match:
+            extracted_text = match.group(1).strip()
+            return extracted_text
         else:
-            consecutive_digits = []  # reset if we hit a non-digit token
-
-        if len(consecutive_digits) == 3:
-            return "".join(consecutive_digits)
-
-    return None
+            return text
+    except Exception as e:
+        return text

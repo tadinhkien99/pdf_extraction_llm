@@ -6,7 +6,9 @@
 
 import json
 
-system_message = """1. Goal
+system_message = """
+
+1. Goal
 You are provided with the complete text extracted from an invoice PDF, which may span multiple pages. Your task is to extract key-value pairs strictly based on a list of keys supplied by the user. Focus on accurately retrieving values corresponding to each user-specified key (e.g., Invoice Number, Date, Total Amount) and ignore all extraneous content.
 -----------------------------------------------------
 2. Return Format
@@ -25,6 +27,8 @@ Ensure that your output remains strictly in the specified JSON format without an
 -----------------------------------------------------
 4. Context Dump
 Utilize the entire provided invoice text—across all pages—as your reference. This text is the sole source for extracting key-value pairs. Be mindful that the invoice may have multiple sections and formatting irregularities. All extractions should rely exclusively on the text context given, ensuring no data is assumed beyond what is provided.
+
+
 """
 
 print(json.dumps(system_message, indent=4, ensure_ascii=False))
