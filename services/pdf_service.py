@@ -23,6 +23,7 @@ class PDFService:
         FastLanguageModel.for_inference(self.model)  # Enable native 2x faster inference
 
     async def generate_text(self, pdf_text, list_of_keys, system_message):
+        list_of_keys = list_of_keys.split("| ")
         list_of_keys_string = "\n".join(list_of_keys)
         user_message = f"""Extract the following key-value pairs from the invoice text:\n{list_of_keys_string}"""
 

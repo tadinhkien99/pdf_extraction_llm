@@ -16,7 +16,7 @@ pdf_service = PDFService()
 
 
 @pdf_router.post("/pdf-extraction")
-async def pdf_extraction(file: UploadFile = File(...), system_msg: str = Form(...), fields: List[str] = Form(...)):
+async def pdf_extraction(file: UploadFile = File(...), system_msg: str = Form(...), fields: str = Form(...)):
     try:
         # Read file data as bytes
         data = await file.read()
