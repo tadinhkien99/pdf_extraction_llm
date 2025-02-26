@@ -1,0 +1,63 @@
+# docker compose -f api/docker-compose.yml -p pdf_service up --build -d
+# docker compose -f api/docker-compose.yml -p pdf_service down -v
+
+version: "3.8"
+
+services:
+  pdf_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pdf_service
+    ports:
+      - "8010:8010"
+    environment:
+      SERVICE: app
+      ENV: production
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - pdf_shared_temp:/app/pdf_shared_temp
+    depends_on:
+      - redis
+      - worker
+    networks:
+      - pdf_network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [ "gpu" ]
+              device_ids: [ "0" ]
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery_worker_pdf
+    environment:
+      SERVICE: worker
+      ENV: production
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - pdf_shared_temp:/app/pdf_shared_temp
+    depends_on:
+      - redis
+    networks:
+      - pdf_network
+
+  redis:
+    image: redis:latest
+    container_name: redis_queue_chatbot
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - pdf_network
+
+volumes:
+  pdf_shared_temp:
+
+
+
+
